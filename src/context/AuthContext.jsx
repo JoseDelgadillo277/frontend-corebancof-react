@@ -1,18 +1,12 @@
 import { createContext, useContext, useState, useCallback, useMemo } from 'react'
 import * as authService from '../services/authService.js'
 
-// Contexto de autenticación del asesor (portal del personal).
+// Contexto de autenticacion del asesor (portal del personal).
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const demoUser = {
-    nombre: 'Jose Delgadillo',
-    nombres: 'Jose',
-    codigo_empleado: 'BF-CORE',
-    perfil: 'Operador',
-  }
-  const [token, setToken] = useState(() => authService.getStoredToken() || 'demo-falabella')
-  const [user, setUser] = useState(() => authService.getStoredUser() || demoUser)
+  const [token, setToken] = useState(() => authService.getStoredToken())
+  const [user, setUser] = useState(() => authService.getStoredUser())
 
   const login = useCallback(async (codigoEmpleado, password) => {
     const { token: newToken, user: newUser } = await authService.login(codigoEmpleado, password)
@@ -24,8 +18,8 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback(() => {
     authService.clearSession()
-    setToken('demo-falabella')
-    setUser(demoUser)
+    setToken(null)
+    setUser(null)
   }, [])
 
   const value = useMemo(
@@ -49,3 +43,4 @@ export function useAuth() {
 }
 
 export default useAuth
+
